@@ -1,0 +1,11 @@
+[package]
+license = "GPL-3.0-or-later"
+name = "sway-workspace-manager"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+[package.metadata.nix]
+build = true
+toolchain = "nightly"
