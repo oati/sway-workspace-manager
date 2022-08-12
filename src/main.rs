@@ -8,7 +8,7 @@ fn main() -> Result<(), swayipc::Error> {
     let command = match Command::new(env::args()) {
         Ok(command) => command,
         Err(msg) => {
-            eprintln!("Usage: sway-workspace-manager switch|move|create|move-to-new|swap prev|next|start|end|<number> [--cycle]\n");
+            eprintln!("Usage: sway-workspace-manager reorder|switch|move|create|move-to-new|swap [prev|next|start|end|<number>] [--cycle]\n");
             return Err(swayipc::Error::CommandFailed(format!("Parse error: {msg}")));
         }
     };

@@ -12,7 +12,8 @@ This program only manages workspace numbers. "Workspace names" that follow the n
 sway-workspace-manager VERB TARGET [--cycle]
 ```
 
-Supported verbs are `switch` `move` `create` `move-to-new` `swap`.
+Supported verbs are `reorder` `switch` `move` `create` `move-to-new` `swap`.
+`reorder` does not require a target.
 
 TARGET must be `prev` `next` `start` `end` or a zero-indexed workspace number.
 

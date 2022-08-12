@@ -14,6 +14,8 @@ pub fn run(
     let num_workspaces = workspaces.names().len();
 
     match command {
+        Command::Reorder => (),
+
         Command::Switch { target, carry } => {
             let target_index = target.num_existing(workspaces.current_index(), num_workspaces)?;
             let target_name = workspaces.name(target_index);
