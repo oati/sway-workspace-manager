@@ -1,6 +1,8 @@
 [package]
 license = "GPL-3.0-or-later"
 name = "sway-workspace-manager"
+description = "A dynamic workspace manager for sway"
+repository = "https://github.com/oati/sway-workspace-manager"
 version = "0.1.0"
 edition = "2021"
 
