@@ -13,8 +13,9 @@ sway-workspace-manager VERB TARGET [--cycle]
 ```
 
 Supported verbs are `reorder` `switch` `move` `create` `move-to-new` `swap`.
-`reorder` does not require a target.
 
-TARGET must be `prev` `next` `start` `end` or a zero-indexed workspace number.
+`reorder` will only fix the workspace numbers, and does not require a target.
+
+TARGET must be `prev` `next` `start` `end` or a 1-indexed workspace number.
 
 `--cycle` only affects the program's behavior when the target is `prev` or `next`, and when the verb is `switch` `move` or `swap`.
