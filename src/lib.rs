@@ -11,7 +11,7 @@ pub fn run(
     mut workspaces: OrderedWorkspaces,
     command: Command,
 ) -> Result<(), swayipc::Error> {
-    let num_workspaces = workspaces.names().len();
+    let num_workspaces = workspaces.names().len() - 1;
 
     match command {
         Command::Reorder => (),

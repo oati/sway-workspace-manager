@@ -22,18 +22,53 @@ impl Workspaces {
 
     pub fn reorder(&self, connection: &mut Connection) -> Result<(), swayipc::Error> {
         // make sure that workspace numbers are correctly ordered
-        for (index, workspace) in self.0.iter().enumerate() {
-            // workspace number can be -1 if it's not numbered
-            let num: Option<usize> = workspace.num.try_into().ok();
-            let name = workspace.name.trim_start_matches(char::is_numeric);
 
-            if let Some(num) = num {
-                if num != index {
-                    connection
-                        .run_command(format!("rename workspace {num}{name} to {index}{name}"))?;
+        let workspaces = &self.0;
+
+        let last = workspaces.last().unwrap().num;
+
+        // if the last workspace is within bounds, we have nothing to do here
+        if last == -1 || last > workspaces.len() as i32 {
+            for (index, workspace) in workspaces.iter().enumerate() {
+                // 1-indexing
+                let index = index + 1;
+
+                // workspace number can be -1 if it's not numbered
+                let num: Option<usize> = workspace.num.try_into().ok();
+                let name = workspace.name.trim_start_matches(char::is_numeric);
+
+                if let Some(num) = num {
+                    if num > index {
+                        connection.run_command(format!(
+                            "rename workspace {num}{name} to {index}{name}"
+                        ))?;
+                    }
+                } else {
+                    connection.run_command(format!("rename workspace {name} to {index}{name}"))?;
                 }
-            } else {
-                connection.run_command(format!("rename workspace {name} to {index}{name}"))?;
+            }
+        }
+
+        let first = workspaces.first().unwrap().num;
+
+        // handle the case for a zero-workspace
+        if first == 0 {
+            for (index, workspace) in workspaces.iter().enumerate().rev() {
+                // 1-indexing
+                let index = index + 1;
+
+                // workspace number can be -1 if it's not numbered
+                let num: Option<usize> = workspace.num.try_into().ok();
+                let name = workspace.name.trim_start_matches(char::is_numeric);
+
+                // only consider numbered workspaces
+                if let Some(num) = num {
+                    if num < index {
+                        connection.run_command(format!(
+                            "rename workspace {num}{name} to {index}{name}"
+                        ))?;
+                    }
+                }
             }
         }
 
@@ -41,25 +76,28 @@ impl Workspaces {
     }
 
     fn names(&self) -> Vec<Option<String>> {
-        self.0
-            .iter()
-            .map(|workspace| {
+        // 1-indexed list of workspace names
+        std::iter::once(None)
+            .chain(self.0.iter().map(|workspace| {
                 Some(
                     workspace
                         .name
                         .trim_start_matches(char::is_numeric)
                         .to_string(),
                 )
-            })
+            }))
             .collect()
     }
 
     pub fn current_workspace(&self) -> (usize, &Workspace) {
-        self.0
+        let (index, workspace) = self
+            .0
             .iter()
             .enumerate()
             .find(|(_, workspace)| workspace.focused)
-            .expect("current workspace not found")
+            .expect("current workspace not found");
+        // 1-indexing
+        (index + 1, workspace)
     }
 }
 

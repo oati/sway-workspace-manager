@@ -16,9 +16,9 @@ impl Position {
 
         match *self {
             Position::Prev { cycle } => {
-                if index == 0 {
+                if index == 1 {
                     if cycle {
-                        Ok(len - 1)
+                        Ok(len)
                     } else {
                         Err(swayipc::Error::CommandFailed(
                             "No previous workspace in the first workspace".to_string(),
@@ -30,9 +30,9 @@ impl Position {
             }
 
             Position::Next { cycle } => {
-                if index == len - 1 {
+                if index == len {
                     if cycle {
-                        Ok(0)
+                        Ok(1)
                     } else {
                         Err(swayipc::Error::CommandFailed(
                             "No next workspace in the last workspace".to_string(),
@@ -43,12 +43,12 @@ impl Position {
                 }
             }
 
-            Position::Start => Ok(0),
+            Position::Start => Ok(1),
 
-            Position::End => Ok(len - 1),
+            Position::End => Ok(len),
 
             Position::Num(num) => {
-                if num <= len {
+                if 1 <= num && num <= len + 1 {
                     Ok(num)
                 } else {
                     Err(swayipc::Error::CommandFailed(
@@ -71,12 +71,12 @@ impl Position {
 
             Position::Next { cycle: _ } => Ok(index + 1),
 
-            Position::Start => Ok(0),
+            Position::Start => Ok(1),
 
-            Position::End => Ok(len),
+            Position::End => Ok(len + 1),
 
             Position::Num(num) => {
-                if num <= len {
+                if 1 <= num && num <= len + 1 {
                     Ok(num)
                 } else {
                     Err(swayipc::Error::CommandFailed(
