@@ -57,14 +57,12 @@ pub fn run(
             let target_index = target.num_existing(workspaces.current_index(), num_workspaces)?;
             let target_name = &workspaces.names()[target_index].as_ref().unwrap();
 
-            connection.run_command(format!(
-                "rename workspace {target_index}{target_name} to temp"
-            ))?;
+            connection.run_command(format!("rename workspace {target_index}{target_name} to a"))?;
             connection.run_command(format!(
                 "rename workspace {current_index}{current_name} to {target_index}{target_name}"
             ))?;
             connection.run_command(format!(
-                "rename workspace temp to {current_index}{current_name}"
+                "rename workspace a to {current_index}{current_name}"
             ))?;
         }
     }
