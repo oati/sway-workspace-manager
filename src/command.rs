@@ -3,7 +3,7 @@ pub enum Position {
     Next { cycle: bool },
     Start,
     End,
-    Num(usize),
+    Num { num: usize, extra: bool },
 }
 
 impl Position {
@@ -47,8 +47,8 @@ impl Position {
 
             Position::End => Ok(len),
 
-            Position::Num(num) => {
-                if 1 <= num && num <= len + 1 {
+            Position::Num { num, extra } => {
+                if 1 <= num && (!extra && num <= len || extra && num <= len + 1) {
                     Ok(num)
                 } else {
                     Err(swayipc::Error::CommandFailed(
@@ -75,7 +75,7 @@ impl Position {
 
             Position::End => Ok(len + 1),
 
-            Position::Num(num) => {
+            Position::Num { num, .. } => {
                 if 1 <= num && num <= len + 1 {
                     Ok(num)
                 } else {
@@ -110,10 +110,16 @@ impl Command {
         }
 
         let position = args.next().ok_or("not enough arguments")?;
-        let cycle = match args.next() {
-            Some(option) => option.as_str() == "--cycle",
-            None => false,
-        };
+
+        let mut cycle = false;
+        let mut extra = false;
+        while let Some(flag) = args.next() {
+            match flag.as_str() {
+                "--cycle" => cycle = true,
+                "--extra" => extra = true,
+                _ => (),
+            };
+        }
 
         let target = match position.as_str() {
             "prev" => Ok(Position::Prev { cycle }),
@@ -122,7 +128,7 @@ impl Command {
             "end" => Ok(Position::End),
             other => other
                 .parse::<usize>()
-                .map(Position::Num)
+                .map(|num| Position::Num { num, extra })
                 .or(Err("invalid target")),
         }?;
 
