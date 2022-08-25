@@ -34,15 +34,13 @@ pub fn run(
 
         Command::Create { target, carry } => {
             let target_index = target.num_new(workspaces.current_index(), num_workspaces)?;
-            let target_name = workspaces.name(target_index).to_string();
 
             workspaces.insert(connection, target_index)?;
 
             if carry {
                 // carrying out of an empty workspace silently fails
-                connection.run_command(format!(
-                    "move container to workspace \"{target_index}{target_name}\""
-                ))?;
+                connection
+                    .run_command(format!("move container to workspace \"{target_index}\""))?;
             }
 
             connection.run_command(format!("workspace \"{target_index}\""))?;
