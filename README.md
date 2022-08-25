@@ -15,7 +15,7 @@ sway-workspace-manager VERB TARGET [--cycle] [--extra]
 Supported verbs are `reorder` `switch` `move` `create` `move-to-new` `swap` `rename`.
 
 `reorder` will only fix the workspace numbers, and does not require a target.
-`rename` renames the current workspace to the workspace number concatenated with TARGET.
+`rename` renames the current workspace to `workspace_num:TARGET`.
 
 For all other verbs, TARGET must be `prev` `next` `start` `end` or a 1-indexed workspace number.
 
