@@ -45,7 +45,7 @@ pub fn run(
                 ))?;
             }
 
-            connection.run_command(format!("workspace \"{target_index}{target_name}\""))?;
+            connection.run_command(format!("workspace \"{target_index}\""))?;
 
             Workspaces::get(connection)?.reorder(connection)?;
         }
