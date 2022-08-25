@@ -61,10 +61,10 @@ pub fn run(
                 "rename workspace \"{target_index}{target_name}\" to a"
             ))?;
             connection.run_command(format!(
-                "rename workspace \"{current_index}{current_name}\" to \"{target_index}{target_name}\""
+                "rename workspace \"{current_index}{current_name}\" to \"{target_index}{current_name}\""
             ))?;
             connection.run_command(format!(
-                "rename workspace a to \"{current_index}{current_name}\""
+                "rename workspace a to \"{current_index}{target_name}\""
             ))?;
         }
 
