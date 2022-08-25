@@ -23,11 +23,11 @@ pub fn run(
             if carry {
                 // carrying out of an empty workspace silently fails
                 connection.run_command(format!(
-                    "move container to workspace {target_index}{target_name}"
+                    "move container to workspace \"{target_index}{target_name}\""
                 ))?;
             }
 
-            connection.run_command(format!("workspace {target_index}{target_name}"))?;
+            connection.run_command(format!("workspace \"{target_index}{target_name}\""))?;
 
             Workspaces::get(connection)?.reorder(connection)?;
         }
@@ -41,11 +41,11 @@ pub fn run(
             if carry {
                 // carrying out of an empty workspace silently fails
                 connection.run_command(format!(
-                    "move container to workspace {target_index}{target_name}"
+                    "move container to workspace \"{target_index}{target_name}\""
                 ))?;
             }
 
-            connection.run_command(format!("workspace {target_index}{target_name}"))?;
+            connection.run_command(format!("workspace \"{target_index}{target_name}\""))?;
 
             Workspaces::get(connection)?.reorder(connection)?;
         }
@@ -57,12 +57,14 @@ pub fn run(
             let target_index = target.num_existing(workspaces.current_index(), num_workspaces)?;
             let target_name = &workspaces.names()[target_index].as_ref().unwrap();
 
-            connection.run_command(format!("rename workspace {target_index}{target_name} to a"))?;
             connection.run_command(format!(
-                "rename workspace {current_index}{current_name} to {target_index}{target_name}"
+                "rename workspace \"{target_index}{target_name}\" to a"
             ))?;
             connection.run_command(format!(
-                "rename workspace a to {current_index}{current_name}"
+                "rename workspace \"{current_index}{current_name}\" to \"{target_index}{target_name}\""
+            ))?;
+            connection.run_command(format!(
+                "rename workspace a to \"{current_index}{current_name}\""
             ))?;
         }
     }

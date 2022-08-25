@@ -40,11 +40,12 @@ impl Workspaces {
                 if let Some(num) = num {
                     if num > index {
                         connection.run_command(format!(
-                            "rename workspace {num}{name} to {index}{name}"
+                            "rename workspace \"{num}{name}\" to \"{index}{name}\""
                         ))?;
                     }
                 } else {
-                    connection.run_command(format!("rename workspace {name} to {index}{name}"))?;
+                    connection
+                        .run_command(format!("rename workspace \"{name}\" to \"{index}{name}\""))?;
                 }
             }
         }
@@ -65,7 +66,7 @@ impl Workspaces {
                 if let Some(num) = num {
                     if num < index {
                         connection.run_command(format!(
-                            "rename workspace {num}{name} to {index}{name}"
+                            "rename workspace \"{num}{name}\" to \"{index}{name}\""
                         ))?;
                     }
                 }
@@ -137,7 +138,7 @@ impl OrderedWorkspaces {
         for i in (index..self.names.len()).rev() {
             if let Some(name) = &self.names[i] {
                 connection.run_command(format!(
-                    "rename workspace {i}{name} to {j}{name}",
+                    "rename workspace \"{i}{name}\" to \"{j}{name}\"",
                     j = i + 1
                 ))?;
             }
