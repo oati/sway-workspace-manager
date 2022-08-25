@@ -67,6 +67,15 @@ pub fn run(
                 "rename workspace a to \"{current_index}{current_name}\""
             ))?;
         }
+
+        Command::Rename { new_name } => {
+            let current_index = workspaces.current_index();
+            let current_name = &workspaces.names()[current_index].as_ref().unwrap();
+
+            connection.run_command(format!(
+                "rename workspace \"{current_index}{current_name}\" to \"{current_index}{new_name}\""
+            ))?;
+        }
     }
 
     Ok(())

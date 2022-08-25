@@ -93,6 +93,7 @@ pub enum Command {
     Switch { target: Position, carry: bool },
     Create { target: Position, carry: bool },
     Swap { target: Position },
+    Rename { new_name: String },
 }
 
 impl Command {
@@ -102,6 +103,10 @@ impl Command {
         let verb = args.next().ok_or("not enough arguments")?;
         if verb.as_str() == "reorder" {
             return Ok(Self::Reorder);
+        }
+        if verb.as_str() == "rename" {
+            let new_name = args.next().ok_or("not enough argumets")?;
+            return Ok(Self::Rename { new_name });
         }
 
         let position = args.next().ok_or("not enough arguments")?;
