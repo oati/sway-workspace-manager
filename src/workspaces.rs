@@ -25,50 +25,42 @@ impl Workspaces {
 
         let workspaces = &self.0;
 
-        let last = workspaces.last().unwrap().num;
+        // renumbering down
+        for (index, workspace) in workspaces.iter().enumerate() {
+            // 1-indexing
+            let index = index + 1;
 
-        // if the last workspace is within bounds, we have nothing to do here
-        if last == -1 || last > workspaces.len() as i32 {
-            for (index, workspace) in workspaces.iter().enumerate() {
-                // 1-indexing
-                let index = index + 1;
+            // workspace number can be -1 if it's not numbered
+            let num: Option<usize> = workspace.num.try_into().ok();
+            let name = workspace.name.trim_start_matches(char::is_numeric);
 
-                // workspace number can be -1 if it's not numbered
-                let num: Option<usize> = workspace.num.try_into().ok();
-                let name = workspace.name.trim_start_matches(char::is_numeric);
-
-                if let Some(num) = num {
-                    if num > index {
-                        connection.run_command(format!(
-                            "rename workspace \"{num}{name}\" to \"{index}{name}\""
-                        ))?;
-                    }
-                } else {
-                    connection
-                        .run_command(format!("rename workspace \"{name}\" to \"{index}{name}\""))?;
+            if let Some(num) = num {
+                if num > index {
+                    connection.run_command(format!(
+                        "rename workspace \"{num}{name}\" to \"{index}{name}\""
+                    ))?;
                 }
+            } else {
+                connection
+                    .run_command(format!("rename workspace \"{name}\" to \"{index}{name}\""))?;
             }
         }
 
-        let first = workspaces.first().unwrap().num;
+        // renumbering up
+        for (index, workspace) in workspaces.iter().enumerate().rev() {
+            // 1-indexing
+            let index = index + 1;
 
-        // handle the case for a zero-workspace
-        if first == 0 {
-            for (index, workspace) in workspaces.iter().enumerate().rev() {
-                // 1-indexing
-                let index = index + 1;
+            // workspace number can be -1 if it's not numbered
+            let num: Option<usize> = workspace.num.try_into().ok();
+            let name = workspace.name.trim_start_matches(char::is_numeric);
 
-                // workspace number can be -1 if it's not numbered
-                let num: Option<usize> = workspace.num.try_into().ok();
-                let name = workspace.name.trim_start_matches(char::is_numeric);
-
-                // only consider numbered workspaces
-                if let Some(num) = num {
-                    if num < index {
-                        connection.run_command(format!(
-                            "rename workspace \"{num}{name}\" to \"{index}{name}\""
-                        ))?;
-                    }
+            // only consider numbered workspaces
+            if let Some(num) = num {
+                if num < index {
+                    connection.run_command(format!(
+                        "rename workspace \"{num}{name}\" to \"{index}{name}\""
+                    ))?;
                 }
             }
         }
