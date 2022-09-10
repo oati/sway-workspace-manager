@@ -5,7 +5,7 @@ use swayipc::Connection;
 const USAGE: &str =  "\
 Usage:
     sway-workspace-manager switch|move|create|move-to-new|swap [prev|next|start|end|<number>] [--cycle] [--extra]
-    sway-workspace-manager reorder
+    sway-workspace-manager reorder [--daemon]
     sway-workspace-manager rename <new-name>
 ";
 

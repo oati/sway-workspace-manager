@@ -89,7 +89,7 @@ impl Position {
 }
 
 pub enum Command {
-    Reorder,
+    Reorder { daemon: bool },
     Switch { target: Position, carry: bool },
     Create { target: Position, carry: bool },
     Swap { target: Position },
@@ -101,9 +101,12 @@ impl Command {
         args.next();
 
         let verb = args.next().ok_or("not enough arguments")?;
+
         if verb.as_str() == "reorder" {
-            return Ok(Self::Reorder);
+            let daemon = args.any(|flag| flag.as_str() == "--daemon");
+            return Ok(Self::Reorder { daemon });
         }
+
         if verb.as_str() == "rename" {
             let new_name = args.next().ok_or("not enough argumets")?;
             return Ok(Self::Rename { new_name });

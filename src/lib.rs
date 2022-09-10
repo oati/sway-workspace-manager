@@ -1,10 +1,23 @@
-use swayipc::Connection;
+use swayipc::{Connection, Event, EventType, WorkspaceChange};
 
 mod command;
 mod workspaces;
 
 pub use command::{Command, Position};
 pub use workspaces::{OrderedWorkspaces, Workspaces};
+
+fn process_event(
+    connection: &mut Connection,
+    event: Result<Event, swayipc::Error>,
+) -> Result<(), swayipc::Error> {
+    if let Event::Workspace(event) = event? {
+        if event.change == WorkspaceChange::Empty {
+            Workspaces::get(connection)?.reorder(connection)?;
+        }
+    }
+
+    Ok(())
+}
 
 pub fn run(
     connection: &mut Connection,
@@ -14,7 +27,17 @@ pub fn run(
     let num_workspaces = workspaces.names().len() - 1;
 
     match command {
-        Command::Reorder => (),
+        Command::Reorder { daemon: false } => (),
+        Command::Reorder { daemon: true } => {
+            // event loop
+            for event in Connection::new()?.subscribe([EventType::Workspace])? {
+                let result = process_event(connection, event);
+
+                if let Err(err) = result {
+                    eprintln!("{err}");
+                }
+            }
+        }
 
         Command::Switch { target, carry } => {
             let target_index = target.num_existing(workspaces.current_index(), num_workspaces)?;
