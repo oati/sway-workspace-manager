@@ -9,7 +9,7 @@ This program only manages workspace numbers. "Workspace names" that follow the n
 
 ## Usage
 ```
-sway-workspace-manager VERB TARGET [--cycle] [--extra]
+sway-workspace-manager VERB TARGET [--daemon] [--cycle] [--extra]
 ```
 
 Supported verbs are `reorder` `switch` `move` `create` `move-to-new` `swap` `rename`.
@@ -18,6 +18,8 @@ Supported verbs are `reorder` `switch` `move` `create` `move-to-new` `swap` `ren
 `rename` renames the current workspace to `workspace_num:TARGET`.
 
 For all other verbs, TARGET must be `prev` `next` `start` `end` or a 1-indexed workspace number.
+
+`--daemon` only applies to the `reorder` verb, and sets the program to reorder automatically on "workspace close" events.
 
 `--cycle` only affects the program's behavior when the target is `prev` or `next`, and when the verb is `switch` `move` or `swap`.
 
